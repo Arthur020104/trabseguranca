@@ -27,23 +27,40 @@ def bitsToStr(bits):
 def xor(a, b):
   return [x ^ y for x, y in zip(a, b)]
 
+def bitsToIntb(bits):
+    value = 0
+    for b in bits:
+        value = (value << 1) | b
+    return value
+def randomPass(bits, rng):
+    return [rng.getrandbits(1) for _ in range(len(bits))]
+def xorPass(bits, rng):
+    return [b ^ rng.getrandbits(1) for b in bits]
+
 def GEN(seed):
   seedBits = []
-
-  # apenas para garantir que seed eh uma lista de bits
-  if isinstance(seed, str): 
+  if isinstance(seed, str):
     seedBits = strToBits(seed)
   elif isinstance(seed, list):
     seedBits = seed
   else:
     seedBits = strToBits(str(seed))
-    
+
+
+  seedInt = bitsToIntb(seedBits)
+  rng = random.Random(seedInt)
+
   K = []
   curr = seedBits.copy()
+
   for _ in range(4):
+    curr = xorPass(curr, rng)
+    
     curr = fFunction(curr, seedBits)
     K.extend(curr)
+
   return K
+
 
 
 # Função F do Feistel
@@ -133,7 +150,7 @@ def DEC(K, C):
     subkeys.append(currentK)
     
   # na dec as chaves sao usadas na ordem inversa
-  subkeysRev = subkeys
+  subkeysRev = subkeys.copy()
   subkeysRev.reverse()
   
   for i in range(rounds):
