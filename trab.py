@@ -49,14 +49,15 @@ def GEN(seed):
 
   seedInt = bitsToIntb(seedBits)
   rng = random.Random(seedInt)
-
   K = []
   curr = seedBits.copy()
 
-  for _ in range(4):
+  for i in range(4):
     curr = xorPass(curr, rng)
     
     curr = fFunction(curr, seedBits)
+    rngi = random.Random(seedInt + i)
+    curr = randomPass(curr, rngi)
     K.extend(curr)
 
   return K
@@ -101,7 +102,7 @@ def ENC(K, M):
   originalKL = K[:half]
   originalKR = K[half:]
   
-  rounds = 16
+  rounds = 50
   
   for i in range(rounds):
     LPrev = L
@@ -135,7 +136,7 @@ def DEC(K, C):
   originalKL = K[:half]
   originalKR = K[half:]
   
-  rounds = 16
+  rounds = 50
   
   subkeys = []
   for i in range(rounds):
