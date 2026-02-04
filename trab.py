@@ -50,7 +50,6 @@ def GEN(seed):
 def fFunction(R, k):
   if not R: return []
   
-  # Notation variables:
   # rVal: representacao do lado direito R em inteiro
   # kVal: representacao da subchave k em inteiro
   rVal = bitsToInt(R)
@@ -62,11 +61,9 @@ def fFunction(R, k):
   # xor entre R e k
   temp = rVal ^ kVal
   
-  # Operation 2: Modular Arithmetic for non-linearity (S-Box simulation)
   # temp = (temp * 27 + 55) mod 2^{len(R)}
   temp = (temp * 0x1B + 0x37) & mask 
   
-  # Operation 3: Circular shift (Permutation)
   # temp = (temp << 3) | (temp >> (len(R) - 3))
   shift = 3
   temp = ((temp << shift) & mask) | (temp >> (len(R) - shift))
